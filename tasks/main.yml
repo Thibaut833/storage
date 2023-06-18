@@ -1,0 +1,38 @@
+---
+# tasks file for storage
+- name: Je crée le volume group sur sdb
+  community.general.lvg:
+    vg: data
+    pvs: /dev/sdb
+    state: present
+    force: true
+
+- name: Je crée le volume logique data
+  community.general.lvol:
+    vg: data
+    lv: data
+    size: 100%FREE
+    state: present
+    active: true
+    shrink: false
+    force: true
+
+- name: Je formatte /dev/mapper/data-data en ext4
+  community.general.filesystem:
+    dev: /dev/mapper/data-data
+    state: present
+    fstype: ext4
+
+- name: Je crée le dossier /data
+  ansible.builtin.file:
+    path: /data
+    mode: "770"
+    state: directory
+
+- name: Je monte le volume logique data-data sur /data
+  ansible.posix.mount:
+    path: /data
+    src: /dev/mapper/data-data
+    state: mounted
+    fstype: ext4
+    boot: true
