@@ -1,4 +1,4 @@
-Base
+Storage
 =========
 
 Configuration stockage d'une machine debian ou ubuntu, lvm, avec second disque.
